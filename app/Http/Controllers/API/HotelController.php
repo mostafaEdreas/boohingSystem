@@ -37,7 +37,7 @@ class HotelController extends Controller
      */
     public function store(HotelRequest $request): JsonResponse
     {
-        d
+        
         $hotel = $this->hotelService->createHotel($request->validated());
 
         return (new HotelResource($hotel))
