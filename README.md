@@ -10,6 +10,35 @@ A Laravel application for managing hotels and rooms, with a web dashboard and a 
   - Search availability by city, check-in/check-out dates, and number of guests
   - Dashboard overview (stats: hotels, rooms, ratings, cities, countries)
 
+  
+  ## 🛡️ Error Handling & Developer Mode
+
+  This application features a custom exception handling layer designed to protect sensitive data while providing developers with a "hidden" debug mode.
+
+  ### 1. Dedicated Error Logging
+  All critical system errors (HTTP 500) are automatically intercepted and recorded in a custom log file for easier maintenance:
+  * **Path:** `storage/logs/500.log`
+  * **Captured Data:** Error message and timestamp (Web and API).
+
+  ### 2. Smart Error Responses
+  The system adapts its error messages based on the request type and environment settings:
+
+  | Request Type | Mode | Result |
+  | :--- | :--- | :--- |
+  | **Web (Browser)** | Production | Redirects **back** with a Bootstrap alert: *"There is an unexpected error..."* |
+  | **API (JSON)** | Production | Returns JSON: `{ "status": "error", "message": "..." }` |
+  | **Any** | Developer Mode | Shows full Laravel stack trace/Ignition debug page. |
+
+  ### 3. Developer Mode Configuration
+  To see full error details (Developer Mode), ensure your `.env` meets **one** of these conditions:
+  ```env
+  # Option A: Global Debug
+  APP_DEBUG=true
+
+  # Option B: Selective Dev Mode (Environment must be production + APP_DEV true)
+  APP_ENV=production
+  APP_DEV=true
+
 - **REST API**
   - **Auth:** Login (returns token), Logout (revokes token). Token required for all other endpoints.
   - **Hotels:** Create hotel, List hotels with filters (city, rating) and pagination

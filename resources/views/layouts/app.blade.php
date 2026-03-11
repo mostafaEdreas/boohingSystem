@@ -87,6 +87,14 @@
         </nav>
 
         <main class="py-4">
+            @if(session('error_message'))
+                <div class="container mt-3">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error!</strong> {{ session('error_message') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            @endif
             @yield('content')
         </main>
     </div>
