@@ -11,7 +11,7 @@ class SearchRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; 
+        return true;
     }
 
     /**
@@ -21,25 +21,23 @@ class SearchRequest extends FormRequest
     {
         return [
             // Hotel Filters
-            'h_city'              => 'nullable|string|max:100',
+            'h_city' => 'nullable|string|max:100',
 
-            'r_guests'              => 'nullable|integer|min:1', // Alias for occupancy if needed
+            'r_guests' => 'nullable|integer|min:1', // Alias for occupancy if needed
 
             // Reservation/Availability Dates
-            'res_checkin_date'   => 'required_with:res_checkout_date|date|after_or_equal:today',
-            'res_checkout_date'  => 'required_with:res_checkin_date|date|after:res_checkin_date',
+            'res_checkin_date' => 'required_with:res_checkout_date|date|after_or_equal:today',
+            'res_checkout_date' => 'required_with:res_checkin_date|date|after_or_equal:res_checkin_date',
         ];
     }
 
-public function attributes(): array
-{
-    return [
-        'h_city' => 'City Name',
-        'res_checkin_date' => 'Check-in Date',
-         'r_guests'  => 'Number of Guests',
-         'res_checkout_date' => 'Check-out Date'
-    ];
-}
-
-    
+    public function attributes(): array
+    {
+        return [
+            'h_city' => 'City Name',
+            'res_checkin_date' => 'Check-in Date',
+            'r_guests' => 'Number of Guests',
+            'res_checkout_date' => 'Check-out Date',
+        ];
+    }
 }

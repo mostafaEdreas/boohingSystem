@@ -5,37 +5,40 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Sevices\UserService;
+use App\Services\UserService;
+use App\Traits\Auth\APiLogin;
 use Illuminate\Support\Facades\Hash;
 
- class AuthController extends Controller 
- {
+class AuthController extends Controller
+{
+    use APiLogin;
 
     protected $userService;
-     /**
-      * Create a new controller instance.
-      *
-      * @return void
-      */
-     public function __construct(UserService $userService)
-     {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(UserService $userService)
+    {
         $this->userService = $userService;
-         $this->middleware('guest')->except('logout');
-         $this->middleware('auth:api')->only('logout');
-     }
+        $this->middleware('guest')->except('logout');
+        $this->middleware('auth:sanctum')->only('logout');
+    }
 
     /**
      * Handle a registration request for the application.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function register(RegisterRequest $request)
     {
         $data['user'] = $this->userService->createUser($request->validated());
         $data['token'] = $this->generateToken($data['user']);
 
-        return response()->json(['data' => $data ,'message' => 'User registered successfully']);
+        return response()->json(['data' => $data, 'message' => 'User registered successfully']);
     }
 
     /**
@@ -44,10 +47,10 @@ use Illuminate\Support\Facades\Hash;
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function login(LoginRequest $request )
+    public function login(LoginRequest $request)
     {
         $user = $this->checkCredentials($request->validated());
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
@@ -67,7 +70,4 @@ use Illuminate\Support\Facades\Hash;
 
         return response()->json(['message' => 'Logout successful']);
     }
-
-
-
- }
+}

@@ -28,9 +28,11 @@ class HotelRepository
 
     public function list(Request $request, array $relations = [], array $columns = ['*']): Paginator
     {
+        $perPage = $request->input('per_page', 10);
+
         return $this->model::select($columns)
             ->filter($request)
-            ->with($relations)->paginate(10);
+            ->with($relations)->paginate($perPage);
     }
 
     public function createHotel(array $data): ?Hotel

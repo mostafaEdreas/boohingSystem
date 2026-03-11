@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repostories;
+namespace App\Repositories;
 
 use App\Models\User;
 
@@ -17,5 +17,4 @@ class UserRepository
     {
         return $this->model::where('email', $email)->first();
     }
-
-}   
+}

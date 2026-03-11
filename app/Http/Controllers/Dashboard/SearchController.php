@@ -14,8 +14,8 @@ class SearchController extends Controller
        
     }
     public function search(SearchRequest $request){
-        $filled =  $request->only($request->validated());
-        $filledRequest = new Request($filled);
+        $filledRequest = new Request($request->validated());
+
         $data['results'] = $this->hotelService->search($filledRequest);
         return view('search.index' ,$data);
     }

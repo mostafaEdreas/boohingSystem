@@ -1,59 +1,150 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Hotel Booking System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel application for managing hotels and rooms, with a web dashboard and a REST API. Users can search for available rooms by city, dates, and guest count. The API is protected by token authentication (Laravel Sanctum) and rate limiting.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Web dashboard** (authenticated)
+  - Manage hotels (create, list, edit, delete)
+  - Manage rooms (create, list) linked to hotels
+  - Search availability by city, check-in/check-out dates, and number of guests
+  - Dashboard overview (stats: hotels, rooms, ratings, cities, countries)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **REST API**
+  - **Auth:** Login (returns token), Logout (revokes token). Token required for all other endpoints.
+  - **Hotels:** Create hotel, List hotels with filters (city, rating) and pagination
+  - **Rooms:** Create room (linked to a hotel)
+  - **Search:** Search availability by city, check-in date, check-out date, guests — returns hotels with available rooms and total price (price × nights)
+  - **Rate limiting:** Login limited to 5 requests/minute per IP; API endpoints to 60 requests/minute per user/IP
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tech Stack
 
-## Learning Laravel
+- **PHP** 8.2+
+- **Laravel** 12
+- **Laravel Sanctum** (API token auth)
+- **Laravel UI** (web auth scaffolding)
+- **Tailwind CSS** 4, **Vite**
+- **Pest** (testing)
+- **MySQL** / **MariaDB** (or SQLite for local dev)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Requirements
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.2 or higher
+- Composer
+- Node.js & npm (for frontend assets)
+- MySQL, MariaDB, or SQLite
 
-## Laravel Sponsors
+## Installation
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 1. Clone the repository
 
-### Premium Partners
+```bash
+git clone https://github.com/mostafaEdreas/boohingSystem.git 
+cd bookingSystem
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 2. Install PHP dependencies
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Environment configuration
 
-## Code of Conduct
+Copy the example environment file and generate the application key:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Security Vulnerabilities
+Edit `.env` and set your database connection. For example, for MySQL:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=booking_system
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+
+### 4. Run migrations and seeder
+
+```bash
+php artisan migrate --seed
+```
+
+### 5. Install frontend dependencies and build assets
+
+```bash
+npm install
+npm run build
+```
+
+For development with hot reload, use `npm run dev` in a separate terminal instead of `npm run build`.
+
+
+(Ensure `.env` and database are configured before or after as needed.)
+
+## Running the application
+
+Start the Laravel development server:
+
+```bash
+php artisan serve
+```
+
+The app will be available at `http://localhost:8000`. Redirect to the dashboard and log in (or register) to use the web interface.
+
+
+
+## API Overview
+
+Base URL: `http://localhost:8000/api` (or your app URL + `/api`).
+
+- All endpoints expect **Accept: application/json**.
+- Protected endpoints require **Authorization: Bearer {token}** (token returned by Login).
+
+| Method | Endpoint       | Auth   | Description                    |
+|--------|----------------|--------|--------------------------------|
+| POST   | `/api/login`   | No     | Login; returns user and token  |
+| POST   | `/api/logout`  | Token  | Logout; revokes current token  |
+| GET    | `/api/hotels`  | Token  | List hotels (query: city, rating, per_page) |
+| POST   | `/api/hotels`  | Token  | Create hotel (name, city, country, rating)  |
+| POST   | `/api/rooms`   | Token  | Create room (hotel_id, name, price_per_night, max_occupancy, available_rooms, rooms_count) |
+| GET    | `/api/search`  | Token  | Search availability (query: city, checkin_date, checkout_date, guests) |
+
+**Rate limits**
+
+- Login: 5 requests per minute per IP.
+- Other API routes: 60 requests per minute per user (or per IP when unauthenticated).
+
+A Postman collection is provided in `postman/Booking_System_API.postman_collection.json`. Import it and set the `base_url` and `token` variables.
+
+## Testing
+
+Run all tests:
+
+```bash
+php artisan test --compact
+```
+
+Run only the Search API feature tests:
+
+```bash
+php artisan test --compact --filter=ApiSearch
+```
+
+## Project structure (high level)
+
+- **Web:** `routes/web.php` → dashboard routes; controllers in `App\Http\Controllers\Dashboard` and `App\Http\Controllers\Auth`.
+- **API:** `routes/api.php` → API routes; controllers in `App\Http\Controllers\Api` and `App\Http\Controllers\API` (Auth).
+- **Business logic:** `App\Services` (e.g. HotelService, RoomService, UserService), `App\Repositories` for data access.
+- **API responses:** `App\Http\Resources` (HotelResource, RoomResource) for JSON.
+- **Validation:** `App\Http\Requests` (Form Requests) for web and API.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT.

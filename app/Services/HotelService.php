@@ -43,7 +43,7 @@ class HotelService
         return $hotel;
     }
 
-    public function delete($id, )
+    public function delete($id )
     {
         $hotel = $this->hotelRepository->delete($id);
 
