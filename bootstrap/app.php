@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -26,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
     // 2. Handle the Response based on request type
     $exceptions->render(function (Throwable $e, Request $request) {
-        if (!config('app.debug') && !(config('app.env') == 'production' && config('app.APP_DEV') )) {
+        if (!config('app.debug')  ) {
             $msg = 'There is an unexpected error, please contact the developer.';
 
             // If it's an API call (Expect: application/json)

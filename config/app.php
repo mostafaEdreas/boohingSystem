@@ -39,6 +39,8 @@ return [
     |
     */
 
+    'dev_mode' => env('APP_DEV_MODE', false),
+
     'debug' => (bool) env('APP_DEBUG', false),
 
     /*

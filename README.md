@@ -11,7 +11,7 @@ A Laravel application for managing hotels and rooms, with a web dashboard and a 
   - Dashboard overview (stats: hotels, rooms, ratings, cities, countries)
 
   
-  ## 🛡️ Error Handling & Developer Mode
+  ## 🛡️ Error Handling 
 
   This application features a custom exception handling layer designed to protect sensitive data while providing developers with a "hidden" debug mode.
 
@@ -29,15 +29,9 @@ A Laravel application for managing hotels and rooms, with a web dashboard and a 
   | **API (JSON)** | Production | Returns JSON: `{ "status": "error", "message": "..." }` |
   | **Any** | Developer Mode | Shows full Laravel stack trace/Ignition debug page. |
 
-  ### 3. Developer Mode Configuration
-  To see full error details (Developer Mode), ensure your `.env` meets **one** of these conditions:
-  ```env
-  # Option A: Global Debug
-  APP_DEBUG=true
 
-  # Option B: Selective Dev Mode (Environment must be production + APP_DEV true)
-  APP_ENV=production
-  APP_DEV=true
+
+
 
 - **REST API**
   - **Auth:** Login (returns token), Logout (revokes token). Token required for all other endpoints.
